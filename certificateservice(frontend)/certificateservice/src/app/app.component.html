@@ -1,0 +1,100 @@
+<div class="container mt-4 "   >
+  <h1 class="text-center">Certificate Management</h1>
+
+  <!-- Form to Register New Certificate -->
+  <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="mt-4 tabler  background:#eefdff rounded-lg  shadow w-30 p-5   text-black  " style="width: 50%; margin-left: 25%; margin-bottom: 2rem;"> 
+    <div class="form-group">
+      <label for="studentName">Student Name</label>
+      <input type="text" id="studentName" name="studentName" ngModel class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="courseName">Course Name</label>
+      <input type="text" id="courseName" name="courseName" ngModel class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="issuedDate">Issued Date</label>
+      <input type="date" id="issuedDate" name="issuedDate" ngModel class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Register Certificate</button>
+  </form>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center mt-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Certificates Table -->
+  <table *ngIf="!isLoading && certificateDetails.length" class="table table-striped mt-4">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Student Name</th>
+        <th>Course Name</th>
+        <th>Issued Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let certificate of certificateDetails">
+        <td>{{ certificate.id }}</td>
+        <td>{{ certificate.studentName }}</td>
+        <td>{{ certificate.courseName }}</td>
+        <td>{{ certificate.issuedDate }}</td>
+        <td style="display: flex;gap: 3px;">
+          <button class="btn btn-info btn-sm" (click)="viewCertificate(certificate)" data-bs-toggle="modal" data-bs-target="#viewModal">View</button>
+          <button class="btn btn-warning btn-sm" (click)="edit(certificate)" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteCertificate(certificate)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- View Modal -->
+  <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewModalLabel">View Certificate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Student Name:</strong> {{ certificateToView?.studentName }}</p>
+          <p><strong>Course Name:</strong> {{ certificateToView?.courseName }}</p>
+          <p><strong>Issued Date:</strong> {{ certificateToView?.issuedDate }}</p>
+          <button class="btn btn-primary" (click)="downloadCertificate()">Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit Certificate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #updateForm="ngForm" (ngSubmit)="updateCertificate()">
+            <div class="form-group">
+              <label for="studentName">Student Name</label>
+              <input type="text" id="studentName" [(ngModel)]="certificateToUpdate.studentName" name="studentName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="courseName">Course Name</label>
+              <input type="text" id="courseName" [(ngModel)]="certificateToUpdate.courseName" name="courseName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="issuedDate">Issued Date</label>
+              <input type="date" id="issuedDate" [(ngModel)]="certificateToUpdate.issuedDate" name="issuedDate" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Update Certificate</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
